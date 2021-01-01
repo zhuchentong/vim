@@ -26,6 +26,7 @@ set smartcase 		"开启智能大小写
 noremap Q :wq<CR>
 "=>重新加载配置文件
 noremap <F12> :source $MYVIMRC<CR>
+"=>安装插件
 noremap <F10> :PlugInstall<CR>
 "=>跳转到下一个搜索结果
 noremap = nzz
@@ -33,6 +34,22 @@ noremap = nzz
 noremap - Nzz
 "=>取消高亮
 noremap <LEADER><CR> :nohlsearch<CR>
+"=>分屏设置
+noremap <LEADER>sl :set splitright<CR>:vsplit<CR>
+noremap <LEADER>sh :set nosplitright<CR>:vsplit<CR>
+noremap <LEADER>sk :set nosplitbelow<CR>:split<CR>
+noremap <LEADER>sj :set splitbelow<CR>:split<CR>
+"=>分屏跳转设置
+noremap <LEADER>l <C-w>l
+noremap <LEADER>h <C-w>h
+noremap <LEADER>j <C-w>j
+noremap <LEADER>k <C-w>k
+"=>分屏大小设置
+noremap <up> :res +5<CR>
+noremap <down> :res -5<CR>
+noremap <left> :vertical res -5<CR>
+noremap <right> :vertical res +5<CR>
+
 "===
 "插件设置
 "===
