@@ -39,12 +39,21 @@ noremap <LEADER><CR> :nohlsearch<CR>
 call plug#begin('~/.vim/plugged')
 
 Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
+Plug 'vim-airline/vim-airline'
+Plug 'connorholyday/vim-snazzy'
 
 call plug#end()
+
 
 "===
 "初始化执行
 "===
 "=>初始化取消高亮显示
 exec "nohlsearch"
+
+"===
+"plugin:vim-snazzy
+"===
+color snazzy
+let g:SnazzyTransparent = 1
 
