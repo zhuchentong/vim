@@ -7,15 +7,24 @@ filetype on
 filetype indent on
 filetype plugin on
 filetype plugin indent on
+set hidden
+set nobackup
+set nowritebackup
 set encoding=utf-8
 set expandtab
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
+set cmdheight=2
+set updatetime=300
+
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"  "模式下光标样式
 let &t_SR = "\<Esc>]50;CursorShape=2\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 let &t_ut=''
+"set Vim-specific sequences for RGB colors
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 "===
 "基础设置
 "===
@@ -89,20 +98,35 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'connorholyday/vim-snazzy'
 Plug 'wincent/command-t'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'mileszs/ack.vim'
+Plug 'airblade/vim-rooter'
+Plug 'lilydjwg/fcitx.vim'
+Plug 'preservim/nerdcommenter'
+Plug 'posva/vim-vue'
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
 call plug#end()
 
 "===
 "插件配置
 "===
-"=>plugin:vim-snazzy
+"=>Plugin:vim-snazzy
 color snazzy
 let g:SnazzyTransparent = 1
 
-"=>plugin:NERDTree
+"=>Plugin:NERDTree
+let NERDTreeShowBookmarks = 1 
+let NERDTreeShowHidden = 1
 noremap <LEADER>tt :NERDTreeToggle<CR>
+noremap <LEADER>tc :NERDTreeFocus<CR>
+noremap <LEADER>tf :NERDTreeFind<CR>
 
-"=>plugin:NERDTree-git
+
+autocmd vimenter * NERDTree | wincmd p
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") &&b:NERDTree.isTabTree()) | q | endif
+
+"=>Plugin:NERDTree-git
 let g:NERDTreeGitStatusIndicatorMapCustom = {
                 \ 'Modified'  :'✹',
                 \ 'Staged'    :'✚',
@@ -115,8 +139,75 @@ let g:NERDTreeGitStatusIndicatorMapCustom = {
                 \ 'Clean'     :'✔︎',
                 \ 'Unknown'   :'?',
                 \ }
-"=>plugin:vim-airline
+
+"=>Plugin:vim-airline
 let g:airline_theme='atomic'
+
+"=>Plugin:command-t
+set wildignore+=*/node_modules/*     " Don't search inside Node.js modules
+let g:CommandTWildIgnore=&wildignore
+let g:CommandTSmartCase = 1
+let g:CommandTMatchWindowReverse = 0
+let g:CommandTIgnoreCase = 0
+let g:CommandTMaxHeight = 25
+
+
+noremap <LEADER>ff :CommandT<CR>
+noremap <LEADER>fb :CommandTBuffer<CR>
+
+"=>Plugin:ack.vim
+let g:ackprg = 'ag --vimgrep'
+
+noremap <Leader>F :Ack!<Space>
+
+"=>Plugin:vim-rotter
+let g:rooter_patterns = ['.git']
+let g:rooter_change_directory_for_non_project_files = 'current'
+
+"=>PlugInstall:coc.vim
+"使用tab切换选择项
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" 使用回车选择提示项
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+" 代码定义跳转
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+" 跳转文档
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+"
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+function! s:show_documentation()
+    if (index(['vim','help'], &filetype) >= 0)
+      execute 'h '.expand('<cword>')
+    elseif (coc#rpc#ready())
+      call CocActionAsync('doHover')
+    else
+      execute '!' . &keywordprg . " " . expand('<cword>')
+    endif
+endfunction
+
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+"=>Plugin:vim-prettire
+map <Leader>py <Plug>(Prettier)
+
+"=>Plugin:presevim/nerdcommenter
+let g:NERDCreateDefaultMappings = 1
 
 "===
 "初始化执行
