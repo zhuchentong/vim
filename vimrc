@@ -105,6 +105,7 @@ Plug 'lilydjwg/fcitx.vim'
 Plug 'preservim/nerdcommenter'
 Plug 'posva/vim-vue'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+Plug 'mhinz/vim-startify'
 
 call plug#end()
 
@@ -124,7 +125,8 @@ noremap <LEADER>tf :NERDTreeFind<CR>
 
 
 autocmd vimenter * NERDTree | wincmd p
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") &&b:NERDTree.isTabTree()) | q | endif
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
+    \ quit | endif
 
 "=>Plugin:NERDTree-git
 let g:NERDTreeGitStatusIndicatorMapCustom = {
@@ -204,7 +206,7 @@ function! s:check_back_space() abort
 endfunction
 
 "=>Plugin:vim-prettire
-map <Leader>py <Plug>(Prettier)
+map <LEADER>p :Prettier<CR>
 
 "=>Plugin:presevim/nerdcommenter
 let g:NERDCreateDefaultMappings = 1
