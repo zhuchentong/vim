@@ -17,6 +17,7 @@ set shiftwidth=2
 set softtabstop=2
 set cmdheight=2
 set updatetime=300
+set shortmess+=c
 
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"  "模式下光标样式
 let &t_SR = "\<Esc>]50;CursorShape=2\x7"
@@ -25,6 +26,8 @@ let &t_ut=''
 "set Vim-specific sequences for RGB colors
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+let html_no_rendering=1
+
 "===
 "基础设置
 "===
@@ -48,6 +51,7 @@ set scrolloff=5
 "===
 "=>直接保存退出
 noremap Q :wq<CR>
+noremap <c-s> :Prettier<CR>:w<CR>
 "=>重新加载配置文件
 noremap <F12> :source $MYVIMRC<CR>
 "=>安装插件
@@ -102,10 +106,12 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'mileszs/ack.vim'
 Plug 'airblade/vim-rooter'
 Plug 'lilydjwg/fcitx.vim'
-Plug 'preservim/nerdcommenter'
 Plug 'posva/vim-vue'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'mhinz/vim-startify'
+Plug 'tyru/caw.vim'
+Plug 'tpope/vim-unimpaired'
+Plug 'airblade/vim-gitgutter'
 
 call plug#end()
 
@@ -162,17 +168,31 @@ let g:ackprg = 'ag --vimgrep'
 
 noremap <Leader>F :Ack!<Space>
 
-"=>Plugin:vim-rotter
+"=>Plugin:vim-rooter
 let g:rooter_patterns = ['.git']
 let g:rooter_change_directory_for_non_project_files = 'current'
 
 "=>PlugInstall:coc.vim
 "使用tab切换选择项
+if has("patch-8.1.1564")
+   set signcolumn=number
+else
+   set signcolumn=yes
+endif
+
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
+
+if has('nvim')
+    inoremap <silent><expr> <c-space> coc#refresh()
+else
+    inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
 " 使用回车选择提示项
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
@@ -183,6 +203,10 @@ nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 " 跳转文档
 nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
 
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
@@ -208,8 +232,9 @@ endfunction
 "=>Plugin:vim-prettire
 map <LEADER>p :Prettier<CR>
 
-"=>Plugin:presevim/nerdcommenter
-let g:NERDCreateDefaultMappings = 1
+"=>Plugin:vim-gitgutter
+noremap <LEADER>gt :GitGutterToggle<CR>
+noremap <LEADER>gh :GitGutterLineHighlightsToggle<CR>
 
 "===
 "初始化执行
