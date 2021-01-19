@@ -18,6 +18,10 @@ set softtabstop=2
 set cmdheight=2
 set updatetime=300
 set shortmess+=c
+set foldmethod=marker
+set foldmarker=region,endregion
+set foldenable
+
 
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"  "模式下光标样式
 let &t_SR = "\<Esc>]50;CursorShape=2\x7"
@@ -51,7 +55,8 @@ set scrolloff=5
 "===
 "=>直接保存退出
 noremap Q :wq<CR>
-noremap <c-s> :Prettier<CR>:w<CR>
+nnoremap <c-s> :Prettier<CR>:w<CR>
+inoremap <c-s> <Esc>:Prettier<CR>:w<CR>
 "=>重新加载配置文件
 noremap <F12> :source $MYVIMRC<CR>
 "=>安装插件
@@ -110,14 +115,21 @@ Plug 'posva/vim-vue'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'mhinz/vim-startify'
 Plug 'tyru/caw.vim'
-Plug 'tpope/vim-unimpaired'
+Plug 'bagrat/vim-buffet'
 Plug 'airblade/vim-gitgutter'
+Plug 'Yggdroot/indentLine'
+Plug 'jmckiern/vim-shoot', { 'do': '\"./install.py\" chromedriver' }
+Plug 'djoshea/vim-autoread'
+
 
 call plug#end()
 
 "===
 "插件配置
 "===
+"=>Plugin:vue-vim
+"let g:vue_pre_processors = 'detect_on_enter'
+
 "=>Plugin:vim-snazzy
 color snazzy
 let g:SnazzyTransparent = 1
@@ -231,10 +243,25 @@ endfunction
 
 "=>Plugin:vim-prettire
 map <LEADER>p :Prettier<CR>
+map <a-F> :Prettier<CR>
 
 "=>Plugin:vim-gitgutter
 noremap <LEADER>gt :GitGutterToggle<CR>
 noremap <LEADER>gh :GitGutterLineHighlightsToggle<CR>
+
+"=>Plugin:vim-buffet
+noremap <Tab> :bn<CR>
+noremap <S-Tab> :bp<CR>
+noremap <Leader><Tab> :Bw<CR>
+noremap <Leader><S-Tab> :Bw!<CR>
+noremap <C-t> :tabnew split<CR>
+
+let g:buffet_powerline_separators = 1
+let g:buffet_tab_icon = "\uf00a"
+let g:buffet_left_trunc_icon = "\uf0a8"
+let g:buffet_right_trunc_icon = "\uf0a9"
+
+
 
 "===
 "初始化执行
