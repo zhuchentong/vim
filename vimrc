@@ -31,6 +31,7 @@ let &t_ut=''
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 let html_no_rendering=1
+let g:indentLine_conceallevel = 0
 
 "===
 "基础设置
@@ -106,7 +107,9 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'connorholyday/vim-snazzy'
-Plug 'wincent/command-t'
+Plug 'wincent/command-t', {
+    \   'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'
+\ }
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'mileszs/ack.vim'
 Plug 'airblade/vim-rooter'
@@ -120,6 +123,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'Yggdroot/indentLine'
 Plug 'jmckiern/vim-shoot', { 'do': '\"./install.py\" chromedriver' }
 Plug 'djoshea/vim-autoread'
+Plug 'christoomey/vim-system-copy'
 
 
 call plug#end()
@@ -159,6 +163,8 @@ let g:NERDTreeGitStatusIndicatorMapCustom = {
                 \ 'Clean'     :'✔︎',
                 \ 'Unknown'   :'?',
                 \ }
+
+let g:NERDTreeIgnore = ['^node_modules$','^\.git$']
 
 "=>Plugin:vim-airline
 let g:airline_theme='atomic'
